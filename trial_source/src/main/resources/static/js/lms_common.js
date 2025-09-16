@@ -7,6 +7,10 @@ function submitcheck() {
 function changecheck(){
   return window.confirm('変更します。よろしいですか？　※既に試験が受験されている場合、試験の問題を追加または削除すると試験結果が参照できなくなります。');
 }
+function updatecheck(){
+  return window.confirm('更新します。よろしいですか？');
+}
+
 function allCheck(parentName, object) {
   if(object.checked){
     $(parentName + ' input').prop('checked', true);
