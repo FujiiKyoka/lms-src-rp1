@@ -1,6 +1,7 @@
 package jp.co.sss.lms.service;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +72,22 @@ public class StudentAttendanceService {
 		}
 
 		return attendanceManagementDtoList;
+	}
+	
+	/**
+	 * 勤怠入力情報取得
+	 * @param courseId
+	 * @param lmsUserId
+	 * @return true 
+	 */
+	public boolean inputcheckAttendance(Integer lmsUserId) {
+	    // 今日の日付を取得
+	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    String today = simpleDateFormat.format(new Date());
+
+	    //未入力の件数を取得
+	    int countNotAttencance = tStudentAttendanceMapper.inputcheckAttendance(lmsUserId, today,Constants.DB_FLG_FALSE);
+	    return countNotAttencance > 0;
 	}
 
 	/**

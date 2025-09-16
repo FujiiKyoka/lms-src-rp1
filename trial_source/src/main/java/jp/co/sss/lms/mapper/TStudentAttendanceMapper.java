@@ -26,6 +26,16 @@ public interface TStudentAttendanceMapper {
 	 */
 	List<TStudentAttendance> findByLmsUserId(@Param("lmsUserId") Integer lmsUserId,
 			@Param("deleteFlg") Short deleteFlg);
+	
+	/**
+	 * 勤怠未入力件数取得
+	 * @param lmsUserId
+	 * @param today
+	 * @param deleteFlg
+	 * @return
+	 */
+	Integer inputcheckAttendance(@Param("lmsUserId") Integer lmsUserId,
+            @Param("today") String today,@Param("deleteFlg") Short deleteFlg);
 
 	/**
 	 * 勤怠情報（受講生入力）取得（LMSユーザーID＆日付）
