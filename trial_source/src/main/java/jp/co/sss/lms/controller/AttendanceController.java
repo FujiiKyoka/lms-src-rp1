@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -15,6 +14,7 @@ import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
+import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
 
 /**
@@ -30,6 +30,8 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
+	@Autowired
+	private AttendanceUtil attendanceUtil;
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -134,17 +136,22 @@ public class AttendanceController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
-	public String complete(@Valid AttendanceForm attendanceForm, BindingResult bindingResult, Model model, BindingResult result)
+	public String complete(@Valid AttendanceForm attendanceForm, Model model)
 			throws ParseException {
 		
 		//入力チェック
-		if (result.hasErrors()) {
+		String error = studentAttendanceService.updateCheck(attendanceForm);
+		model.addAttribute("error", error);
+		if (error != null) {
+			//中抜け時間マップを取得
+			attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+			
+			model.addAttribute("error", error);
 			model.addAttribute("attendanceForm", attendanceForm);
 			return "attendance/update";
 		}
-
 		// 更新
-		String message = studentAttendanceService.update(attendanceForm,bindingResult);
+		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
