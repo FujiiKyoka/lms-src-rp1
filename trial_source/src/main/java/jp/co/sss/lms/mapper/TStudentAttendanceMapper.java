@@ -32,10 +32,10 @@ public interface TStudentAttendanceMapper {
 	 * @param lmsUserId
 	 * @param today
 	 * @param deleteFlg
-	 * @return
+	 * @return 勤怠未入力件数
 	 */
-	Integer inputcheckAttendance(@Param("lmsUserId") Integer lmsUserId,
-            @Param("today") String today,@Param("deleteFlg") Short deleteFlg);
+	Integer notEnterCount(@Param("lmsUserId") Integer lmsUserId,
+            @Param("trainingDate") String trainingDate,@Param("deleteFlg") Short deleteFlg);
 
 	/**
 	 * 勤怠情報（受講生入力）取得（LMSユーザーID＆日付）

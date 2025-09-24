@@ -76,18 +76,16 @@ public class StudentAttendanceService {
 	
 	/**
 	 * 勤怠入力情報取得
-	 * @param courseId
-	 * @param lmsUserId
-	 * @return true 
+	 * @return 勤怠未入力件数取得結果
 	 */
-	public boolean inputcheckAttendance(Integer lmsUserId) {
+	public boolean inputcheckAttendance() {
 	    // 今日の日付を取得
 	    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	    String today = simpleDateFormat.format(new Date());
+	    String trainingDate = simpleDateFormat.format(new Date());
 
 	    //未入力の件数を取得
-	    int countNotAttencance = tStudentAttendanceMapper.inputcheckAttendance(lmsUserId, today,Constants.DB_FLG_FALSE);
-	    return countNotAttencance > 0;
+	    int countNotAttendance = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(), trainingDate,Constants.DB_FLG_FALSE);
+	    return countNotAttendance > 0;
 	}
 
 	/**

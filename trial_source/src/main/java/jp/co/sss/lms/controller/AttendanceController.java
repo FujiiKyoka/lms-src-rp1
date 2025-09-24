@@ -51,7 +51,7 @@ public class AttendanceController {
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 		
 		// 未入力チェック
-	    boolean inputCheck = studentAttendanceService.inputcheckAttendance(loginUserDto.getLmsUserId());
+	    boolean inputCheck = studentAttendanceService.inputcheckAttendance();
 	    model.addAttribute("inputCheck", inputCheck);
 		return "attendance/detail";
 	}
