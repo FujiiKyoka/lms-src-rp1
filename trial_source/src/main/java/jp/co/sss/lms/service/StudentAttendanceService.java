@@ -84,7 +84,7 @@ public class StudentAttendanceService {
 	    String trainingDate = simpleDateFormat.format(new Date());
 
 	    //未入力の件数を取得
-	    int countNotAttendance = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(), trainingDate,Constants.DB_FLG_FALSE);
+	    Integer countNotAttendance = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(), trainingDate,Constants.DB_FLG_FALSE);
 	    return countNotAttendance > 0;
 	}
 

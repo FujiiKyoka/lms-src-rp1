@@ -11,12 +11,12 @@
 		ORDER BY training_date ASC
 	</select>
 
-	<select id="notEnterCount" resultType="int">
+	<select id="notEnterCount" resultType="Integer">
 	  <![CDATA[
 	    SELECT COUNT(*)
 	    FROM t_student_attendance
 	    WHERE lms_user_id = #{lmsUserId}
-	      AND training_date >= date_trunc('month', CAST(#{today} AS DATE))
+	      AND training_date >= date_trunc('month', CAST(#{trainingDate} AS DATE))
 	      AND training_date < CAST(#{trainingDate} AS DATE)
 	      AND delete_flg = #{deleteFlg}
 	      AND (
