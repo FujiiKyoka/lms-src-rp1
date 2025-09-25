@@ -140,13 +140,12 @@ public class AttendanceController {
 			throws ParseException {
 		
 		//入力チェック
-		String error = studentAttendanceService.updateCheck(attendanceForm);
-		model.addAttribute("error", error);
-		if (error != null) {
+		List<String> errors = studentAttendanceService.updateCheck(attendanceForm);
+		if (!errors.isEmpty()) {
 			//中抜け時間マップを取得
 			attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
 			
-			model.addAttribute("error", error);
+			model.addAttribute("errors", errors);
 			model.addAttribute("attendanceForm", attendanceForm);
 			return "attendance/update";
 		}

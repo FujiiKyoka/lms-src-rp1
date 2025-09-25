@@ -349,69 +349,77 @@ public class StudentAttendanceService {
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
 	
-	public String updateCheck(AttendanceForm attendanceForm) {
+	/**
+	 * 
+	 * @param attendanceForm
+	 * @return エラーメッセージ
+	 */
+	public List<String> updateCheck(AttendanceForm attendanceForm) {
+		List<String> errors = new ArrayList<>();
 
 		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
 			// 備考の文字数チェック
 			if (dailyAttendanceForm.getNote() != null
 					&& dailyAttendanceForm.getNote().length() > 100) {
-				return messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
-						new String[] { "備考", "100" });
+				errors.add(messageUtil.getMessage(Constants.VALID_KEY_MAXLENGTH,
+						new String[] { "備考", "100" }));
 			}
 
 			String startTime = dailyAttendanceForm.getTrainingStartTime();
 			String endTime = dailyAttendanceForm.getTrainingEndTime();
-			
+
 			// 出勤時間フォーマットチェック
 			if (startTime != null && !startTime.isEmpty()) {
-			    if (!startTime.matches("^\\d{1,2}:\\d{2}$")) {
-			        return messageUtil.getMessage(Constants.INPUT_INVALID,
-							new String[] { "出勤時間" });
-			    }
+				if (!startTime.matches("^\\d{1,2}:\\d{2}$")) {
+					errors.add(messageUtil.getMessage(Constants.INPUT_INVALID,
+							new String[] { "出勤時間" }));
+				}
 			}
 
 			// 退勤時間フォーマットチェック
 			if (endTime != null && !endTime.isEmpty()) {
-			    if (!endTime.matches("^\\d{1,2}:\\d{2}$")) {
-			        return messageUtil.getMessage(Constants.INPUT_INVALID,
-							new String[] { "退勤時間" });
-			    }
+				if (!endTime.matches("^\\d{1,2}:\\d{2}$")) {
+					errors.add(messageUtil.getMessage(Constants.INPUT_INVALID,
+							new String[] { "退勤時間" }));
+				}
 			}
 
 			// 出勤時間のみ未入力の場合
 			if ((startTime == null || startTime.isEmpty())
 					&& (endTime != null && !endTime.isEmpty())) {
-				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY);
+				errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY));
 			}
 
 			// 出勤時間 ＞ 退勤時間 の場合
 			if (startTime != null && !startTime.isEmpty()
 					&& endTime != null && !endTime.isEmpty()) {
 				if (startTime.compareTo(endTime) >= 0) {
-					return messageUtil.getMessage(
+					errors.add(messageUtil.getMessage(
 							Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
-							new String[] { endTime, startTime });
+							new String[] { endTime, startTime }));
 				}
 			}
-			
+
 			// 中抜け時間 ＞ 勤怠時間 の場合
-			Integer blankTime = dailyAttendanceForm.getBlankTime(); 
-			if (blankTime != null) {
-                // 分に変換
-                String[] startSplit = startTime.split(":");
-                int startMinutes = Integer.parseInt(startSplit[0]) * 60 + Integer.parseInt(startSplit[1]);
+			Integer blankTime = dailyAttendanceForm.getBlankTime();
+			if (blankTime != null
+					&& startTime != null && startTime.matches("^\\d{1,2}:\\d{2}$")
+					&& endTime != null && endTime.matches("^\\d{1,2}:\\d{2}$")) {
 
-                String[] endSplit = endTime.split(":");
-                int endMinutes = Integer.parseInt(endSplit[0]) * 60 + Integer.parseInt(endSplit[1]);
+				String[] startSplit = startTime.split(":");
+				int startMinutes = Integer.parseInt(startSplit[0]) * 60 + Integer.parseInt(startSplit[1]);
 
-                int workingMinutes = endMinutes - startMinutes;
+				String[] endSplit = endTime.split(":");
+				int endMinutes = Integer.parseInt(endSplit[0]) * 60 + Integer.parseInt(endSplit[1]);
 
-                if (blankTime > workingMinutes) {
-                    return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR);
-                }
-            }
+				int workingMinutes = endMinutes - startMinutes;
+
+				if (blankTime > workingMinutes) {
+					errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR));
+				}
+			}
 		}
-		return null;
+		return errors;
 	}
 
 }
