@@ -66,7 +66,11 @@
 											th:value="${dailyAttendanceForm.statusDispName}" />
 									</th:block>
 									<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
-									<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
+									<td class="w220">[[${dailyAttendanceForm.sectionName}]]</td>
+									<td class="w70">
+										<input type="button" value="定時" class="btn btn-success default-button" th:onclick="'onTime('+ ${stat.index} +')'"/>
+									</td>
+									
 									<td class="w70">
 										<input type="text" th:name="|attendanceList[${stat.index}].trainingStartTime|"
 											th:value="${dailyAttendanceForm.trainingStartTime}" class="form-control" />

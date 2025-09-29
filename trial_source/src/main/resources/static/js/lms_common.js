@@ -244,3 +244,10 @@ $(function(){
       }
 
 });
+function onTime(index) {
+		const startInput = document.getElementsByName("attendanceList[" + index + "].trainingStartTime")[0];
+		const endInput = document.getElementsByName("attendanceList[" + index + "].trainingEndTime")[0];
+
+		startInput.value = "09:00";
+		endInput.value = "18:00";
+	}
